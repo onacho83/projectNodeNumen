@@ -1,16 +1,23 @@
 const express = require("express");
 const cors = require("cors");
+const userRoutes = require("../routers/user.routes");
+const mongoCNN = require("../database/mongoCnn");
 
 class Server {
   constructor() {
     this.app = express();
-    this.port = 3000;
+    this.port = process.env.PORT;
     this.path = {
       user: "/api/user",
     };
 
     this.middleware();
     this.routes();
+    this.databaseCNN();
+  }
+
+  async databaseCNN() {
+    await mongoCNN();
   }
 
   middleware() {
@@ -18,11 +25,7 @@ class Server {
   }
 
   routes() {
-    this.app.get("/", (req, res) => {
-      res.status(202).json({
-        msg: "Felicitaciones",
-      });
-    });
+    this.app.use(this.path.user, userRoutes);
   }
 
   listen() {
