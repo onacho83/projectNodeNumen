@@ -1,10 +1,18 @@
 const User = require("../models/user.model");
 
-const userGet = (req, res) => {
+const userGet = async (req, res) => {
+  const usuarios = await User.find();
+  res.status(202).json(usuarios);
+};
+
+const userOneGet = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
   res.status(202).json({
-    msg: "Felicitaciones",
+    user,
   });
 };
+
 const userPost = async (req, res) => {
   const user = new User(req.body);
 
@@ -16,10 +24,13 @@ const userPost = async (req, res) => {
   });
 };
 
-const userPut = (req, res) => {
-  res.status(202).json({
-    msg: "Felicitaciones Put",
-  });
+const userPut = async (req, res) => {
+  const { id } = req.params;
+  const userBody = req.body;
+  const userUpdate = await User.findByIdAndUpdate(id, userBody, { new: true });
+ 
+
+  res.status(202).json(userUpdate);
 };
 
 const userDelete = (req, res) => {
@@ -30,6 +41,7 @@ const userDelete = (req, res) => {
 
 module.exports = {
   userGet,
+  userOneGet,
   userPost,
   userPut,
   userDelete,
