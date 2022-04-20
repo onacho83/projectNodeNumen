@@ -1,11 +1,14 @@
 const { response } = require("express");
 const { request } = require("express");
 const bcryptjs = require("bcryptjs");
+const axios = require("axios").default;
 
 const User = require("../models/user.model");
+const res = require("express/lib/response");
 
 const userGet = async (req, res) => {
   const usuarios = await User.find();
+
   res.status(202).json(usuarios);
 };
 
@@ -65,10 +68,30 @@ const userDelete = async (req, res) => {
   res.status(202).json(userDelete);
 };
 
+const llamadaAxios = async (req, res) => {
+  const { lugar } = req.params;
+
+  const instancia = axios.create({
+    baseURL: `https://api.mapbox.com/geocoding/v5/mapbox.places/${lugar}.json?`,
+    params: {
+      access_token:
+        "pk.eyJ1Ijoib25hY2hvODMiLCJhIjoiY2tybmZtcDU2MXRqYzJwa2Q2d3FvYTY5ZyJ9.80zFtMEBS3lWR-Fzi7-X9g",
+      limit: 3,
+      language: "es",
+    },
+  });
+  const respuesta = await instancia.get().catch((err) => {
+    err.origin = "error en la URL";
+    throw err;
+  });
+  console.log(respuesta.data);
+  res.status(200).json(respuesta.data);
+};
 module.exports = {
   userGet,
   userOneGet,
   userPost,
   userPut,
   userDelete,
+  llamadaAxios,
 };

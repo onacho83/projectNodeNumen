@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const userRoutes = require("../routers/user.routes");
+const axiosRouter = require("../routers/axiosllamada.routes");
 const mongoCNN = require("../database/mongoCnn");
 
 class Server {
@@ -9,6 +10,7 @@ class Server {
     this.port = process.env.PORT;
     this.path = {
       user: "/api/user",
+      axios: "/api/axios",
     };
 
     this.middleware();
@@ -27,6 +29,7 @@ class Server {
   }
 
   routes() {
+    this.app.use(this.path.axios, axiosRouter);
     this.app.use(this.path.user, userRoutes);
   }
 

@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
+
 const {
   userGet,
   userOneGet,
@@ -7,6 +8,7 @@ const {
   userPut,
   userDelete,
 } = require("../controllers/user.controller");
+
 const { existeEmail, existeId } = require("../helpers/customValidate");
 const { validarCampos } = require("../middlewares/validarCampos");
 
